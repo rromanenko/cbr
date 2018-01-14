@@ -31,13 +31,14 @@ soup = bs.BeautifulSoup(source,'lxml')
 #['\r\n                      Доллар США $\n', '\nруб.\xa057,7612', '\n\nруб.\xa0↑58,3151\n']
 #['\r\n                      Евро €\n', '\nруб.\xa067,5344', '\n\nруб.\xa0↑68,3861\n']
             
-cbr_output = ''
+cbr_output = 'Currency Yesterday Today'+'\n'
 for table in soup.find_all('table'):
     table_rows = table.find_all('tr')
     for tr in table_rows:
         td = tr.find_all('td')
         if len(td) and ('Доллар' in td[0].text or 'Евро' in td[0].text):
             row = [i.text.strip().replace(u'\xa0', u' ') for i in td]
+            print(row)
             cbr_output += ' '.join(row)+'\n'
 
 print(cbr_output.encode('ascii', 'ignore').decode('ascii'))

@@ -21,7 +21,7 @@ soup = bs.BeautifulSoup(source,'lxml')
 
 # finding the table and the table row with this info
 # then combining all <td> in a single string
-cbr_output = ''
+cbr_output = 'Currency Yesterday Today'+'\n'
 for table in soup.find_all('table'):
     table_rows = table.find_all('tr')
     for tr in table_rows:
