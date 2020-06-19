@@ -1,10 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-Created on Fri Oct 13 01:42:09 2017
-
-@author: romanromanenko
-"""
 
 # this script gets the main page at cbr.ru, takes the usd and euro currency
 # exchange rates and emails them to a certain email
@@ -12,7 +6,8 @@ Created on Fri Oct 13 01:42:09 2017
 from cbr_config import *
 import bs4 as bs
 import smtplib
-import urllib.request
+# import urllib.request
+import requests
 
 
 def send_email(message):
@@ -37,20 +32,26 @@ def send_email(message):
     server.quit()
 
 
-source = urllib.request.urlopen("http://cbr.ru/").read()
-soup = bs.BeautifulSoup(source,'lxml')
+# source = urllib.request.urlopen("http://cbr.ru/").read()
+# soup = bs.BeautifulSoup(source,'lxml')
+
+res = requests.get("http://cbr.ru")
+cbrPage = bs.BeautifulSoup(res.text, "html.parser")
+
 
 # finding the table and the table row with this info
 # then combining all <td> in a single string
-cbr_output = 'Currency Yesterday Today\n'
-for table in soup.find_all('table'):
+cbr_output = 'Yesterday\tToday\n'
+for table in cbrPage.find_all('table'):
     table_rows = table.find_all('tr')
     for tr in table_rows:
         td = tr.find_all('td')
-        if len(td) and ('Доллар' in td[0].text or 'Евро' in td[0].text):
+        if td and ('Доллар' in td[0].text or 'Евро' in td[0].text):
             row = [i.text.strip().replace(u'\xa0', u' ') for i in td]
-            cbr_output += ' '.join(row)+'\n'
+            cbr_output += '\t'.join(row)+'\n'
 
-print(cbr_output.encode('ascii', 'ignore').decode('ascii'))
+cbrOutputASCII = cbr_output.encode('ascii', 'ignore').decode('ascii')
+print(cbrOutputASCII)
+
 # send an email with all details
-# send_email(cbr_output.encode('ascii', 'ignore').decode('ascii'))
+# send_email(cbrOutputASCII)
