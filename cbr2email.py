@@ -38,7 +38,6 @@ def send_email(message):
 res = requests.get("http://cbr.ru")
 cbrPage = bs.BeautifulSoup(res.text, "html.parser")
 
-
 # finding the table and the table row with this info
 # then combining all <td> in a single string
 cbr_output = 'Yesterday\tToday\n'
@@ -51,7 +50,7 @@ for table in cbrPage.find_all('table'):
             cbr_output += '\t'.join(row)+'\n'
 
 cbrOutputASCII = cbr_output.encode('ascii', 'ignore').decode('ascii')
-print(cbrOutputASCII)
+# print(cbrOutputASCII)
 
 # send an email with all details
-# send_email(cbrOutputASCII)
+send_email(cbrOutputASCII)
