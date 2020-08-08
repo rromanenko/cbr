@@ -14,21 +14,12 @@ def send_email(message):
     """ Send an email to details from config file with a passed message """
 
     server = smtplib.SMTP('smtp.gmail.com', 587)
-    # server.ehlo()
+    server.ehlo()
     server.starttls()
 
     # Email details in config file
     server.login(from_email, from_email_pass)
-
-    msg = "\r\n".join([
-        "From: " + from_email,
-        "To: " + to_email,
-        "Subject: USD and Euro today",
-        "",
-        message
-        ])
-
-    server.sendmail(from_email, to_email, msg)
+    server.sendmail(from_email, to_email, "Subject: USD and Euro today\n" + message)
     server.quit()
 
 
